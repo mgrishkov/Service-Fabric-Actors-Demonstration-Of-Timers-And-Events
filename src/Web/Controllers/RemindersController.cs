@@ -18,22 +18,33 @@ namespace Web.Controllers
             this.context = context;
         }
 
-        // http://localhost:8251/api/Reminders/?message=Hello World&minutes=1&snoozeTime=500000
-        [HttpGet]
-        public async Task<string> Get(string message, int minutes, int snoozeTime)
+        [HttpPost]
+        public async Task<IActionResult> Post(Guid? actorID, string message, int postponeReminderSeconds, int remindEverySeconds)
         {
-            var actorId = Guid.NewGuid();
+            var actorId = actorID ?? Guid.NewGuid();
             var proxy = ActorProxy.Create<IMyActor>(new ActorId(actorId));
-            await proxy.CreateWakeupCallAsync(
-                message,
-                TimeSpan.FromMinutes(minutes),
-                TimeSpan.FromSeconds(snoozeTime));
+
+            await proxy.CreateWakeupCallAsync(message, TimeSpan.FromSeconds(postponeReminderSeconds), TimeSpan.FromSeconds(remindEverySeconds));
 
             await proxy.SubscribeAsync<IWakeupCallEvents>(new WakeupCallEventsHandler());
 
             ServiceEventSource.Current.ServiceMessage(context, $"Reminder {message} created for actor {actorId}");
 
-            return "Reminder created";
+            return Ok(actorId);
+        }
+
+        [HttpDelete]
+        public async Task<IActionResult> Delete(Guid actorId, string message)
+        {
+            var proxy = ActorProxy.Create<IMyActor>(new ActorId(actorId));
+
+            await Task.CompletedTask;
+
+            proxy.DismissWakeupCallAsync(message);
+
+            ServiceEventSource.Current.ServiceMessage(context, $"Reminder {message} will be deleted for actor {actorId}");
+
+            return Accepted();
         }
     }
 }

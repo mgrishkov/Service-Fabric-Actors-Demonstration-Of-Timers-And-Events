@@ -27,11 +27,11 @@ namespace Web
             return new[]
             {
                 new ServiceInstanceListener(serviceContext =>
-                    new WebListenerCommunicationListener(serviceContext, "ServiceEndpoint", (url, listener) =>
+                    new KestrelCommunicationListener(serviceContext, "ServiceEndpoint", (url, listener) =>
                     {
                         ServiceEventSource.Current.ServiceMessage(serviceContext, $"Starting WebListener on {url}");
 
-                        return new WebHostBuilder().UseWebListener()
+                        return new WebHostBuilder().UseKestrel()
                                     .ConfigureServices(
                                         services => services
                                             .AddSingleton(serviceContext))

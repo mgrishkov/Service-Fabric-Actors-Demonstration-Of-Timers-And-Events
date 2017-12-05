@@ -19,7 +19,6 @@ namespace MyActor
     internal class MyActor : Actor, IMyActor, IRemindable
     {
         private readonly ActorId actorId;
-        private const string ReminderName = "WakeupCall";
 
         /// <summary>
         /// Initializes a new instance of MyActor
@@ -69,26 +68,31 @@ namespace MyActor
             ActorEventSource.Current.Message($"Actor {actorId} recieved reminder {reminderName}.");
 
             var ev = GetEvent<IWakeupCallEvents>();
-            ev.WakeupCall(Encoding.ASCII.GetString(state), Id.GetGuidId());
+            ev.WakeupCall(Encoding.ASCII.GetString(state), actorId.GetGuidId());
 
             return Task.CompletedTask;
         }
 
         public async Task CreateWakeupCallAsync(string message, TimeSpan dueTime, TimeSpan snoozeTime)
         {
-            await RegisterReminderAsync(ReminderName, 
-                Encoding.ASCII.GetBytes(message),
-                dueTime,
-                snoozeTime);
+            await RegisterReminderAsync(message, Encoding.ASCII.GetBytes(message), dueTime, snoozeTime);
 
-            ActorEventSource.Current.Message($"Subscribed to event {message} for actor {Id.GetGuidId()}");
+            ActorEventSource.Current.Message($"Subscribed to event {message} for actor {actorId}");
         }
 
-        public async Task DismissWakeupCallAsync(string message, TimeSpan dueTime, TimeSpan snoozeTime)
+        public async Task DismissWakeupCallAsync(string message)
         {
-            await UnregisterReminderAsync(GetReminder(ReminderName));
+            await Task.Delay(TimeSpan.FromSeconds(10));
 
-            ActorEventSource.Current.Message($"Actor {actorId} dismissed event {message}.");
+            await UnregisterReminderAsync(GetReminder(message));
+
+
+            var text = $"Reminder {message} has been removed from Actor {actorId}.";
+            ActorEventSource.Current.Message(text);
+
+            var ev = GetEvent<IWakeupCallEvents>();
+            ev.WakeupCall(text, actorId.GetGuidId());
+
         }
     }
 }

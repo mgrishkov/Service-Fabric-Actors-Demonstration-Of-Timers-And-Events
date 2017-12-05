@@ -1,0 +1,98 @@
+{
+	"info": {
+		"name": "Test",
+		"_postman_id": "057ee268-5523-12ad-d8c8-e73ad668d498",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Add reminder",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "message",
+							"value": "TestMessage1",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "postponeReminderSeconds",
+							"value": "0",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "remindEverySeconds",
+							"value": "3",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "actorId",
+							"value": "6a86ff8b-c2d1-42e3-a1ec-5dfea5e1260c",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8251/api/Reminders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8251",
+					"path": [
+						"api",
+						"Reminders"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Remove reminder",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "formdata",
+					"formdata": [
+						{
+							"key": "actorID",
+							"value": "6a86ff8b-c2d1-42e3-a1ec-5dfea5e1260c",
+							"description": "",
+							"type": "text"
+						},
+						{
+							"key": "message",
+							"value": "TestMessage1",
+							"description": "",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://localhost:8251/api/Reminders",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8251",
+					"path": [
+						"api",
+						"Reminders"
+					]
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

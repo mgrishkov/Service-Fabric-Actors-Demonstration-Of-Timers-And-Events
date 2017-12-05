@@ -7,7 +7,7 @@ namespace Web
     {
         public void WakeupCall(string message, Guid actorId)
         {
-            ServiceEventSource.Current.Message($"Received event {message} from {actorId}");
+            ServiceEventSource.Current.Message($"{message} from {actorId}");
         }
     }
 }
